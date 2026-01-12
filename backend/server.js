@@ -10,7 +10,7 @@ const { default: mongoose } = require('mongoose');
 
 // mongoDB connection string
 const DB_PATH =
-  "mongodb+srv://ArjuPaul:root@arjupaul.abtumje.mongodb.net/uber?retryWrites=true&w=majority&appName=ArjuPaul";
+  process.env.MONGODB_URI;
 
 const server = http.createServer(app)
 
