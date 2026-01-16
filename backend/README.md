@@ -44,3 +44,43 @@ Responses / Status Codes
 Notes
 - Passwords are hashed before storing.
 - Returned `user` omits the password field.
+
+# Auth: POST /users/login
+
+Description
+- Authenticate user with email and password, return an auth token.
+
+URL
+- POST /users/login
+
+Request body (JSON)
+- email: string (required, valid email, min 5 chars)
+- password: string (required, min 6 chars)
+
+Example request
+```json
+{
+  "email": "jane.doe@example.com",
+  "password": "secret123"
+}
+```
+
+Validation rules
+- email: valid email format, min length 5
+- password: min length 6
+
+Responses / Status Codes
+- 200 OK
+  - Body: { "user": { /* user data (password excluded) */ }, "token": "<jwt>" }
+- 400 Bad Request
+  - Validation errors: { "errors": [ { "msg": "...", "param": "...", ... } ] }
+- 401 Unauthorized
+  - "User not found" — email does not exist
+  - "Invalid password" — password does not match
+- 500 Internal Server Error
+  - Unexpected server error
+
+Notes
+- Passwords are compared using bcrypt hashing for security.
+- Returned `user` omits the password field.
+- Token can be used for authenticated requests (typically in Authorization header).
