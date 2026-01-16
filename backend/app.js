@@ -3,6 +3,7 @@ const dotenv = require('dotenv') // dotenv is used to manage environment variabl
 dotenv.config()
 const express = require('express');
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 
 // Internal Module
 const userRoutes = require('./routes/userRoutes');
@@ -12,6 +13,7 @@ const app = express();
 // import cors
 app.use(cors())
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/', (req, res, next) => { 
     res.send('Hello World')

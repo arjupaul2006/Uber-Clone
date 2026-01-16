@@ -1,6 +1,7 @@
 const userModel = require("../model/user");
 const { validationResult } = require("express-validator");
 const userService = require("../services/userService");
+const blacklistModel = require("../model/blacklist");
 
 module.exports.registerUser = async (req, res, next) => {
   // error handling for express-validator is done in middleware
@@ -53,5 +54,24 @@ module.exports.loginUser = async (req, res, next) => {
   // generate auth token
   const token = user.generateAuthToken();
 
+  res.cookies("token", token)
+
   res.status(200).json({ user, token });
+}
+
+module.exports.getUserProfile = async (req, res, next) => {
+  const user = req.user;
+  res.status(200).json({ user });
+}
+
+module.exports.logoutUser = async (req, res, next) => {
+  res.clearCookie("token");
+
+  // get token from header or cookie
+  const token = req.headers.authorization.split(" ")[1] || req.cookies.token;
+
+  // add token to blacklist
+  await blacklistModel.create({ token });
+
+  res.status(200).json({ message: "User logged out successfully" });
 }

@@ -84,3 +84,47 @@ Notes
 - Passwords are compared using bcrypt hashing for security.
 - Returned `user` omits the password field.
 - Token can be used for authenticated requests (typically in Authorization header).
+
+# Auth: GET /users/profile
+
+Description
+- Retrieve the authenticated user's profile information.
+
+URL
+- GET /users/profile
+
+Headers
+- Authorization: Bearer <token> (required)
+
+Responses / Status Codes
+- 200 OK
+  - Body: { "user": { /* user data (password excluded) */ } }
+- 401 Unauthorized
+  - "Unauthorized" — if the token is missing or invalid
+- 500 Internal Server Error
+  - Unexpected server error
+
+Notes
+- The token must be included in the Authorization header for authentication.
+
+# Auth: POST /users/logout
+
+Description
+- Log out the user by clearing the authentication token and adding it to the blacklist.
+
+URL
+- POST /users/logout
+
+Headers
+- Authorization: Bearer <token> (required)
+
+Responses / Status Codes
+- 200 OK
+  - Body: { "message": "User logged out successfully" }
+- 401 Unauthorized
+  - "Unauthorized" — if the token is missing or invalid
+- 500 Internal Server Error
+  - Unexpected server error
+
+Notes
+- The token will be added to a blacklist to prevent further use.
