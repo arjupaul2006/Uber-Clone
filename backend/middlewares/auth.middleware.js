@@ -27,6 +27,7 @@ module.exports.authenticateUser = async (req, res, next) => {
 
     req.user = user;
     return next();
+    
   } catch (error) {
     return res.status(401).json({ message: "Invalid token." });
   }

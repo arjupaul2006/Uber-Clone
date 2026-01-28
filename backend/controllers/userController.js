@@ -7,13 +7,14 @@ module.exports.registerUser = async (req, res, next) => {
   // error handling for express-validator is done in middleware
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(401).json({ errors: errors.array() });
   }
 
   const { fullname, email, password } = req.body;
 
   //convert password to hashed password
-  const hashedPassword = await userModel.hashPassword(password);
+  // const hashedPassword = await userModel.hashPassword(password);
+  const hashedPassword = await userModel.prototype.hashPassword(password);
 
   // create a new user in database
   const user = await userService.createUser({
@@ -32,7 +33,7 @@ module.exports.registerUser = async (req, res, next) => {
 module.exports.loginUser = async (req, res, next) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
-    return res.status(400).json({ errors: error.array() });
+    return res.status(401).json({ errors: error.array() });
   }
 
   const { email, password } = req.body;
@@ -54,21 +55,21 @@ module.exports.loginUser = async (req, res, next) => {
   // generate auth token
   const token = user.generateAuthToken();
 
-  res.cookies("token", token)
+  res.cookie("token", token);
 
   res.status(200).json({ user, token });
 }
 
 module.exports.getUserProfile = async (req, res, next) => {
   const user = req.user;
-  res.status(200).json({ user });
+  res.status(201).json({ user });
 }
 
 module.exports.logoutUser = async (req, res, next) => {
   res.clearCookie("token");
 
   // get token from header or cookie
-  const token = req.headers.authorization.split(" ")[1] || req.cookies.token;
+  const token = req.headers.authorization?.split(" ")[1] || req.cookies.token;
 
   // add token to blacklist
   await blacklistModel.create({ token });
