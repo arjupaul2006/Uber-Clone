@@ -12,6 +12,12 @@ module.exports.registerUser = async (req, res, next) => {
 
   const { fullname, email, password } = req.body;
 
+  // if captain is already exits
+    const isUserAlreadyExits = await userModel.findOne({ email });
+    if (isUserAlreadyExits) {
+      return res.status(400).json({ message: "User is already exits" });
+    }
+
   //convert password to hashed password
   // const hashedPassword = await userModel.hashPassword(password);
   const hashedPassword = await userModel.prototype.hashPassword(password);

@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 
 // Internal Module
 const userRoutes = require('./routes/userRoutes');
+const captainRoutes = require('./routes/captainRoutes')
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/users', userRoutes);
+app.use('/captains', captainRoutes);
 
 app.use('/', (req, res, next) => { 
     res.send('Hello World')
